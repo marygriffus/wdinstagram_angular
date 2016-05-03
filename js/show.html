@@ -1,2 +1,14 @@
-<h4>{{showVm.gram.author}} said: <a data-ui-sref="wdinstagramShow({id: $index})">{{showVm.gram.body}}</a></h4>
+<h4>
+  {{showVm.gram.author}} said:
+  <a data-ui-sref="wdinstagramShow({id: $index})">{{showVm.gram.body}}</a>
+</h4>
 <img data-ng-src="{{showVm.gram.photo_url}}">
+
+<button data-ng-hide="editGram" data-ng-click="editGram = !editGram">Edit</button>
+<form data-ng-show="editGram">
+  <input value="showVm.gram.author" data-ng-model="showVm.gram.author" />
+  <input value="showVm.gram.body" data-ng-model="showVm.gram.body" />
+  <input value="showVm.gram.photo_url" data-ng-model="showVm.gram.photo_url" />
+  <button class="update" data-ng-click="showVm.update(); editGram = !editGram">Save</button>
+  <button class="delete" data-ui-sref="wdinstagramIndex" data-ng-click="showVm.delete()"></button>
+</form>

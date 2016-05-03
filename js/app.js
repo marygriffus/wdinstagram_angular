@@ -2,7 +2,7 @@
 
 (function(){
   angular
-    .module("wdinstagram", ["ui.router"])
+    .module("wdinstagram", ["ui.router", "ngResource"])
     .config(['$stateProvider', RouterFunction])
     .controller("WDIGIndexController", WDIGIndexController)
     .controller("WDIGShowController", WDIGShowController)
@@ -24,34 +24,35 @@
       })
     }
 
-
-    function InstagramFactory(){
-      var igf = this;
-      igf.grams = [
-        {photo_url: "http://i.telegraph.co.uk/multimedia/archive/03597/POTD_chick_3597497k.jpg", author: "Billy", body: "woo, picture"},
-        {photo_url: "http://media2.s-nbcnews.com/j/msnbc/components/video/__new/ss-2015-yip-31-vid-tease.nbcnews-ux-1080-600.jpg", author: "Shannon", body: "i also took a picture"},
-        {photo_url: "https://pbs.twimg.com/profile_images/625105219102318592/M5Zq8Fvx_400x400.jpg", author: "Ny'jae", body: "this is an eagle, amazing"}
-      ];
-      return igf.grams;
+    InstagramFactory.$inject = ["$resource"];
+    function InstagramFactory($resource){
+      return $resource("http://localhost:3000/entries/:id.json", {}, {
+        update: {method: "PUT"}
+      });
     };
 
-    WDIGIndexController.$inject = [ "InstagramFactory" ]
+    WDIGIndexController.$inject = [ "InstagramFactory" ];
     function WDIGIndexController(InstagramFactory){
       var indexVm = this;
-      indexVm.grams = InstagramFactory
-      indexVm.addGram = function() {
-        InstagramFactory.grams.push({photo_url: this.photo_url, author: this.author, body: this.body});
-        indexVm.photo_url = '';
-        indexVm.author = '';
-        indexVm.body = '';
+      indexVm.grams = InstagramFactory.query();
+      indexVm.newGram = "";
+      indexVm.newGram = new InstagramFactory();
+      indexVm.addGram = function($state) {
+        indexVm.newGram.$save().then(function(res){
+          indexVm.grams.push(res)
+        })
       };
-    };
+    }
 
     WDIGShowController.$inject = [ "InstagramFactory", "$stateParams" ];
     function WDIGShowController(InstagramFactory, $stateParams){
       var showVm = this;
-      showVm.grams = InstagramFactory
-      showVm.gram = showVm.grams[$stateParams.id]
-      console.log(showVm.gram)
+      showVm.gram = InstagramFactory.get({id: $stateParams.id});
+      showVm.update = function(){
+        showVm.gram.$update({id: $stateParams.id});
+      };
+      showVm.delete = function(){
+        showVm.gram.$delete({id: $stateParams.id});
+      }
     };
 })();

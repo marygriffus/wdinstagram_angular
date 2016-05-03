@@ -1,0 +1,16 @@
+* {
+  background-color: black;
+  color: white;
+}
+
+img {
+  width: 100%;
+}
+
+.main {
+  width: 100%;
+}
+
+.gram {
+  margin: 20px 20vw 20px 20vw;
+}
