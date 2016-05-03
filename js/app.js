@@ -17,7 +17,7 @@
         controllerAs: "indexVm"
       })
       .state("wdinstagramShow", {
-        url: "/instagrams/:id",
+        url: "/wdinstagrams/:id",
         templateUrl: "js/show.html",
         controller: "WDIGShowController",
         controllerAs: "showVm"
@@ -35,6 +35,7 @@
       return igf.grams;
     };
 
+    WDIGIndexController.$inject = [ "InstagramFactory" ]
     function WDIGIndexController(InstagramFactory){
       var indexVm = this;
       indexVm.grams = InstagramFactory
@@ -46,10 +47,11 @@
       };
     };
 
-    WDIGShowController.$inject = ["$stateParams"]
-    function WDIGShowController($stateParams, InstagramFactory){
+    WDIGShowController.$inject = [ "InstagramFactory", "$stateParams" ];
+    function WDIGShowController(InstagramFactory, $stateParams){
       var showVm = this;
       showVm.grams = InstagramFactory
       showVm.gram = showVm.grams[$stateParams.id]
+      console.log(showVm.gram)
     };
 })();
