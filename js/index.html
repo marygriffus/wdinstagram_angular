@@ -1,0 +1,12 @@
+<button data-ng-hide="newGram" data-ng-click="newGram = !newGram">Add new</button>
+<form data-ng-show="newGram" data-ng-submit="indexVm.addGram(); newGram = !newGram">
+  <input placeholder="Author" data-ng-model="indexVm.author" />
+  <input placeholder="Body" data-ng-model="indexVm.body" />
+  <input placeholder="Photo URL" data-ng-model="indexVm.photo_url" />
+  <button type="submit">Create</button>
+</form>
+
+<div data-ng-repeat="gram in indexVm.grams">
+  <h4>{{gram.author}} said: {{gram.body}}</h4>
+  <img data-ng-src="{{gram.photo_url}}">
+</div>
